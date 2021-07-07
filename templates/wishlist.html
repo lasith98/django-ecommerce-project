@@ -1,0 +1,125 @@
+{% extends 'layout/stroe_layout.html' %}
+{% block content %}
+
+
+    <!-- main wrapper start -->
+    <main>
+        <!-- breadcrumb area start -->
+        <div class="breadcrumb-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="breadcrumb-wrap">
+                            <nav aria-label="breadcrumb">
+                                <ul class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Home</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Wish List</li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- breadcrumb area end -->
+        {% if object.product.count == 0 %}
+            <div class="container">
+                <p style="margin-top: 100px">Your wish List is currently empty.</p>
+                <a href="{% url 'store:shop' %}" class="btn btn__bg d-block"
+                   style="margin-top: 100px;margin-bottom: 100px">Return to shop</a>
+            </div>
+        {% else %}
+            <!-- wishlist main wrapper start -->
+            <div class="wishlist-main-wrapper pt-40 pb-40">
+                <div class="container">
+                    <!-- Wishlist Page Content Start -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <!-- Wishlist Table Area -->
+                            <div class="cart-table table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th class="pro-thumbnail">Thumbnail</th>
+                                        <th class="pro-title">Product</th>
+                                        <th class="pro-price">Price</th>
+                                        <th class="pro-quantity">Stock Status</th>
+                                        <th class="pro-subtotal">Add to Cart</th>
+                                        <th class="pro-remove">Remove</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    {% for product in object.product.all %}
+                                        <tr>
+                                            <td class="pro-thumbnail"><a href="{{ product.get_absolute_url }}"><img
+                                                    class="img-fluid"
+                                                    src="{{ product.image.url }}"
+                                                    alt="Product"/></a></td>
+                                            <td class="pro-title"><a
+                                                    href="{{ product.get_absolute_url }}">{{ product.title }}</a></td>
+                                            <td class="pro-price">
+                                                <span>{{ currency }} {{ product.get_price | floatformat:2 }}</span>
+                                            </td>
+                                            {% if product.is_available %}
+                                                <td class="pro-quantity"><span
+                                                        class="text-success">{{ product.availability }}</span></td>
+                                            {% else %}
+                                                 <td class="pro-quantity"><span
+                                                    class="text-danger">{{ product.availability }}</span></td>
+                                            {% endif %}
+
+
+                                            <td class="pro-subtotal">
+                                                <form action="{% url 'cart:add' %}" method="post"
+                                                      class="form-product-ajax" id="add-cart-{{ product.id }}"
+                                                      is-wish-list="true">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" value="{{ product.id }}" name="product_id">
+                                                    <input type="hidden" value="1" name="quantity">
+                                                    {% if product.is_available %}
+                                                        <a href="javaScript:;" class="btn btn__bg"
+                                                           onclick="$('#add-cart-{{ product.id }}').submit();">Add
+                                                            to
+                                                            Cart</a>
+                                                    {% else %}
+                                                        <a href="javaScript:;" class="btn btn__bg  disabled">Add
+                                                            to
+                                                            Cart</a>
+
+                                                    {% endif %}
+                                                </form>
+                                            </td>
+
+                                            <td class="pro-remove">
+
+                                                <form action="{% url 'customer_data:remove_wish_list_product' %}"
+                                                      method="post"
+                                                      id="remove-wish-list-{{ product.id }}"
+                                                >
+                                                    <input type="hidden" value="{{ product.id }}" name="product_id">
+                                                    {% csrf_token %}
+                                                    <a href="javaScript:;"
+                                                       onclick="$('#remove-wish-list-{{ product.id }}').submit();"><i
+                                                            class="fa fa-trash-o"></i></a>
+                                                </form>
+
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Wishlist Page Content End -->
+                </div>
+            </div>
+            <!-- wishlist main wrapper end -->
+        {% endif %}
+
+    </main>
+    <!-- main wrapper end -->
+{% endblock %}

@@ -1,0 +1,227 @@
+{% extends 'layout/stroe_layout.html' %}
+{% block content %}
+    {% if cart %}
+        <main>
+            <!-- breadcrumb area start -->
+            <div class="breadcrumb-area">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="breadcrumb-wrap">
+                                <nav aria-label="breadcrumb">
+                                    <ul class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Home</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">checkout</li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- breadcrumb area end -->
+            <form action="{% url 'order:place_order' %}" method="post">
+                <!-- checkout main wrapper start -->
+                <div class="checkout-page-wrapper pt-40 pb-32">
+                    <div class="container">
+
+
+                        <div class="row">
+                            <!-- Checkout Billing Details -->
+                            <div class="col-lg-6">
+                                <div class="checkout-billing-details-wrap">
+                                    <h2>Billing Details</h2>
+                                    <div class="billing-form-wrap">
+                                        {% if  request.user.is_authenticated  and  request.user.profile.billing %}
+                                            {{ request.user.profile.billing.html }}
+                                        {% else %}
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="single-input-item">
+                                                        <label for="f_name" class="required">First Name</label>
+                                                        <input type="text" id="f_name" placeholder="First Name" required
+                                                               name="first_name"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="single-input-item">
+                                                        <label for="l_name" class="required">Last Name</label>
+                                                        <input type="text" id="l_name" placeholder="Last Name" required
+                                                               name="last_name"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="single-input-item">
+                                                <label for="email" class="required">Email Address</label>
+                                                <input type="email" id="email" placeholder="Email Address"
+                                                       name="email"/>
+                                            </div>
+                                            <div class="single-input-item">
+                                                <label for="street-address" class="required mt-20">Street
+                                                    address</label>
+                                                <input type="text" id="street-address"
+                                                       placeholder="Street address Line 1"
+                                                       required name="address1"/>
+                                            </div>
+
+                                            <div class="single-input-item">
+                                                <input type="text" placeholder="Street address Line 2 (Optional)"
+                                                       name="address2"/>
+                                            </div>
+
+                                            <div class="single-input-item">
+                                                <label for="town" class="required">Town / City</label>
+                                                <input type="text" id="town" placeholder="Town / City" required
+                                                       name="town_city"/>
+                                            </div>
+
+                                            <div class="single-input-item">
+                                                <label for="phone">Phone</label>
+                                                <input type="text" id="phone" placeholder="Phone" name="phone"/>
+                                            </div>
+                                        {% endif %}
+                                        {% csrf_token %}
+
+
+                                        <div class="checkout-box-wrap">
+                                            <div class="single-input-item">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input"
+                                                           id="ship_to_different" name="ship_to_different">
+                                                    <label class="custom-control-label" for="ship_to_different">Ship to
+                                                        a
+                                                        different address?</label>
+                                                </div>
+                                            </div>
+                                            <div class="ship-to-different single-form-row">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="single-input-item">
+                                                            <label for="f_name_2" class="required">First Name</label>
+                                                            <input type="text" id="f_name_2" placeholder="First Name"
+                                                                   name="s_first_name"/>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="single-input-item">
+                                                            <label for="l_name_2" class="required">Last Name</label>
+                                                            <input type="text" id="l_name_2" placeholder="Last Name"
+                                                                   name="s_last_name"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="single-input-item">
+                                                    <label for="street-address_2" class="required mt-20">Street
+                                                        address</label>
+                                                    <input type="text" id="street-address_2"
+                                                           placeholder="Street address Line 1" name="s_address1"/>
+                                                </div>
+
+                                                <div class="single-input-item">
+                                                    <input type="text" placeholder="Street address Line 2 (Optional)"
+                                                           name="s_address2"/>
+                                                </div>
+
+                                                <div class="single-input-item">
+                                                    <label for="town_2" class="required">Town / City</label>
+                                                    <input type="text" id="town_2" placeholder="Town / City"
+                                                           name="s_town_city"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="single-input-item">
+                                            <label for="ordernote">Order Note</label>
+                                            <textarea name="ordernote" id="ordernote" cols="30" rows="3"
+                                                      placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Order Summary Details -->
+                            <div class="col-lg-6">
+                                <div class="order-summary-details">
+                                    <h2>Your Order Summary</h2>
+                                    <div class="order-summary-content">
+                                        <!-- Order Summary Table -->
+                                        <div class="order-summary-table table-responsive text-center">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th>Products</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for item in cart.item.all %}
+                                                    <tr>
+                                                        <td>{{ item.product.title }} <strong>
+                                                            × {{ item.quantity }}</strong></td>
+                                                        <td>{{ currency }} {{ item.get_total | floatformat:2 }}</td>
+                                                    </tr>
+                                                {% endfor %}
+
+
+                                                </tbody>
+                                                <tfoot>
+                                                <tr>
+                                                    <td>Sub Total</td>
+                                                    <td>
+                                                        <strong>{{ currency }} {{ cart.sub_total |floatformat:2 }}</strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Delivery</td>
+                                                    <td class="d-flex justify-content-center">
+                                                        {{ currency }} {{ cart.shipping_cost |floatformat:2 }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Total Amount</td>
+                                                    <td><strong>{{ currency }} {{ cart.total_with_shipping|floatformat:2 }}</strong>
+                                                    </td>
+                                                </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                        <!-- Order Payment Method -->
+                                        <div class="order-payment-method">
+                                            <div class="single-payment-method show">
+                                                <div class="payment-method-name">
+                                                    <div class="custom-control custom-radio">
+                                                        <input type="radio" id="cashon" name="paymentmethod"
+                                                               value="cash"
+                                                               class="custom-control-input" checked/>
+                                                        <label class="custom-control-label" for="cashon">Cash
+                                                            On
+                                                            Delivery</label>
+                                                    </div>
+                                                </div>
+                                                <div class="payment-method-details" data-method="cash">
+                                                    <p>Pay with cash upon delivery.</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="summary-footer-area">
+                                                <button type="submit" class="btn btn__bg">Place Order
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- checkout main wrapper end -->
+            </form>
+        </main>
+
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% if  product.is_available %}
+    {% if  product.is_new %}
+        <div class="product-label new">
+            <span>new</span>
+        </div>
+    {% endif %}
+    {% if product.is_discount %}
+        <div class="product-label discount">
+            <span>{{ product.discount_text }}</span>
+        </div>
+    {% endif %}
+
+{% else %}
+    <div class="product-label out-of-stock">
+        <span>{{ product.availability }}</span>
+    </div>
+{% endif %}
+
+

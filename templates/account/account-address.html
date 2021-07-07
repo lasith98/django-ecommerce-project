@@ -1,0 +1,143 @@
+{% extends 'layout/account_layout.html' %}
+{% block my_account_tab_menu %}
+    {% include 'account/tab-list.html' with active="address" %}
+{% endblock %}
+{% block my_account_content %}
+    <div class="row">
+        <div class="col">
+            <h3>Billing Address</h3>
+            {% if request.user.profile.billing %}
+                {{ request.user.profile.billing.html }}
+                <a href="javaScript:;" class="btn btn__bg billing-address-toggle" action="edit"
+                   url="{% url 'address:update_address' request.user.profile.billing.id %}"><i
+                        class="fa fa-edit"></i>
+                    Edit Address</a>
+            {% else %}
+                <a href="javaScript:;" class="btn btn__bg billing-address-toggle" action="add"
+                   url="{% url 'address:create_address' %}"><i
+                        class="fa fa-edit"></i>
+                    Add Address</a>
+            {% endif %}
+
+
+        </div>
+
+        <div class="col">
+            <h3>Shipping Address</h3>
+            {% if request.user.profile.shipping %}
+                {{ request.user.profile.shipping.html }}
+                <a href="javaScript:;" class="btn btn__bg shipping-address-toggle" action="edit"
+                   url="{% url 'address:update_address' request.user.profile.shipping.id %}"><i
+                        class="fa fa-edit"></i>
+                    Edit Address</a>
+            {% else %}
+                <a href="javaScript:;" class="btn btn__bg shipping-address-toggle" action="add"
+                   url="{% url 'address:create_address' %}"><i
+                        class="fa fa-edit"></i>
+                    Add Address</a>
+            {% endif %}
+        </div>
+    </div>
+
+
+
+    <div class="billing-address">
+        <br>
+        <form action="" method="post">
+            <input type="hidden" name="address_type" value="Billing">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="single-input-item">
+                        <label for="f_name" class="required">First Name</label>
+                        <input type="text" id="f_name" placeholder="First Name" required
+                               name="first_name"/>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="single-input-item">
+                        <label for="l_name" class="required">Last Name</label>
+                        <input type="text" id="l_name" placeholder="Last Name" required
+                               name="last_name"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="single-input-item">
+                <label for="email" class="required">Email Address</label>
+                <input type="email" id="email" placeholder="Email Address" name="email"/>
+            </div>
+            <div class="single-input-item">
+                <label for="street-address" class="required mt-20">Street address</label>
+                <input type="text" id="street-address" placeholder="Street address Line 1"
+                       required name="address1"/>
+            </div>
+
+            <div class="single-input-item">
+                <input type="text" placeholder="Street address Line 2 (Optional)"
+                       name="address2"/>
+            </div>
+
+            <div class="single-input-item">
+                <label for="town" class="required">Town / City</label>
+                <input type="text" id="town" placeholder="Town / City" required
+                       name="town_city"/>
+            </div>
+
+            <div class="single-input-item">
+                <label for="phone">Phone</label>
+                <input type="text" id="phone" placeholder="Phone" name="phone"/>
+            </div>
+            <div class="single-input-item">
+                <button type="submit" class="btn btn__bg">Save</button>
+            </div>
+
+        </form>
+    </div>
+    <div class="shipping-address">
+        <br>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="address_type" value="Shipping">
+            <input type="hidden" name="email" value="no@g.com"/>
+            <input type="hidden" name="phone" value="0"/>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="single-input-item">
+                        <label for="f_name_2" class="required">First Name</label>
+                        <input type="text" id="f_name_2" placeholder="First Name" name="first_name"/>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="single-input-item">
+                        <label for="l_name_2" class="required">Last Name</label>
+                        <input type="text" id="l_name_2" placeholder="Last Name" name="last_name"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="single-input-item">
+                <label for="street-address_2" class="required mt-20">Street
+                    address</label>
+                <input type="text" id="street-address_2"
+                       placeholder="Street address Line 1" name="address1"/>
+            </div>
+
+            <div class="single-input-item">
+                <input type="text" placeholder="Street address Line 2 (Optional)" name="address2"/>
+            </div>
+
+            <div class="single-input-item">
+                <label for="town_2" class="required">Town / City</label>
+                <input type="text" id="town_2" placeholder="Town / City" name="town_city"/>
+            </div>
+            <div class="single-input-item">
+                <button type="submit" class="btn btn__bg">Save</button>
+            </div>
+        </form>
+
+
+    </div>
+{% endblock %}

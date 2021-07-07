@@ -1,0 +1,65 @@
+{% extends 'layout/account_layout.html' %}
+{% block my_account_tab_menu %}
+    {% include 'account/tab-list.html' with active="orders" %}
+{% endblock %}
+{% block my_account_content %}
+    <h3>Orders</h3>
+    {% if object_list %}
+        <div class="myaccount-table table-responsive text-center">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <tr>
+                <th>Order</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for object in object_list %}
+                <tr>
+                    <td>{{ object.order_id }}</td>
+                    <td>{{ object.order_date }}</td>
+                    <td>{{ object.status }}</td>
+                    <td>{{ currency }} {{ object.total }}</td>
+                    <td><a href="{% url 'customer_data:order-view' object.id %}" class="btn btn__bg">View</a>
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    {% else %}
+        <p>No order has been made yet.</p>
+    {% endif %}
+{% if is_paginated %}
+    <!-- start pagination area -->
+    <div class="paginatoin-area text-center">
+        <ul class="pagination-box">
+            {% if page_obj.has_previous %}
+                <li><a class="previous" href="?page={{ page_obj.previous_page_number }}"><i
+                        class="ion-ios-arrow-left"></i>Previous</a>
+                </li>
+            {% endif %}
+
+            {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <li class="active"><a href="?page={{ i }}">{{ i }}</a></li>
+                {% else %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li><a class="next" href="?page={{ page_obj.next_page_number }}">Next<i
+                        class="ion-ios-arrow-right"></i></a></li>
+            {% endif %}
+        </ul>
+    </div>
+    <!-- end pagination area -->
+{% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,358 @@
+{% extends 'layout/stroe_layout.html' %}
+{% load static %}
+{% block content %}
+
+    <main>
+        {% include 'component/slide.html' with carousel=carousel %}
+        <!-- banner feature area start -->
+        <div class="banner-feature pt-30">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="banner-feature-wrapper">
+                            <!-- feature single item start -->
+                            <div class="banner-feature-item">
+                                <div class="banner-feature-icon">
+                                    <img src="{% static 'img/icon/icon1.png' %}" alt="">
+                                </div>
+                                <div class="banner-feature-post">
+                                    <h6>Free Shipping</h6>
+                                    <p>Free shipping on all US order or order above {{ currency }}200</p>
+                                </div>
+                            </div>
+                            <!-- feature single item end -->
+
+                            <!-- feature single item start -->
+                            <div class="banner-feature-item">
+                                <div class="banner-feature-icon">
+                                    <img src="{% static 'img/icon/icon2.png' %}" alt="">
+                                </div>
+                                <div class="banner-feature-post">
+                                    <h6>Support 24/7</h6>
+                                    <p>Contact us 24 hours a day, 7 days a week</p>
+                                </div>
+                            </div>
+                            <!-- feature single item end -->
+
+                            <!-- feature single item start -->
+                            <div class="banner-feature-item">
+                                <div class="banner-feature-icon">
+                                    <img src="{% static 'img/icon/icon3.png' %}" alt="">
+                                </div>
+                                <div class="banner-feature-post">
+                                    <h6>60-Day Returns</h6>
+                                    <p>If you don’t love it, you have 60 days to return it.</p>
+                                </div>
+                            </div>
+                            <!-- feature single item end -->
+
+                            <!-- feature single item start -->
+                            <div class="banner-feature-item">
+                                <div class="banner-feature-icon">
+                                    <img src="{% static 'img/icon/icon4.png' %}" alt="">
+                                </div>
+                                <div class="banner-feature-post">
+                                    <h6>100% Payment Secure</h6>
+                                    <p>We ensure secure payment with PEV</p>
+                                </div>
+                            </div>
+                            <!-- feature single item end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- banner feature area end -->
+        {% if discount_products %}
+            <div class="categories-area pt-40 pb-40">
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="section-header-wrap">
+                                <!-- section title start -->
+                                <div class="section-title">
+                                    <h2>Discount</h2>
+                                </div>
+                                <!-- section title end -->
+
+                                <!-- Start Slider Navigation -->
+                                <div class="ht-slick-nav slick-append">
+                                    <button class="prev-four"><i class="ion-ios-arrow-left"></i></button>
+                                    <button class="next-four right"><i class="ion-ios-arrow-right"></i></button>
+                                </div>
+                                <!-- End Slider Navigation -->
+                            </div>
+
+                            <!-- categories features start -->
+                            <div class="categories-features-wrapper">
+                                <div class="ht-slick-slider-wrap">
+                                    <div class="ht-slick-slider slick-row-15"
+                                         data-slick='{"slidesToShow": 4, "slidesToScroll": 1, "speed": 1000, "arrows": true, "prevArrow": ".prev-four", "nextArrow": ".next-four", "responsive":[{"breakpoint":992, "settings":{"slidesToShow": 3}}, {"breakpoint":768, "settings":{"slidesToShow": 2}}, {"breakpoint":480, "settings":{"slidesToShow": 1}}]}'>
+
+                                        {% for discount_product in discount_products %}
+                                            <!-- single item start -->
+                                            <div class="product-item">
+                                                <div class="product-thumb">
+                                                    <a href="{{ discount_product.get_absolute_url }}">
+                                                        <img src="{{ discount_product.image.url }}"
+                                                             alt="Not Found">
+                                                    </a>
+                                                    <div class="add-to-links">
+                                                        <form action="{% url 'cart:add' %}" method="post"
+                                                              class="form-product-ajax"
+                                                              id="form-id-{{ discount_product.id }}">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="quantity" value="1">
+                                                            <input type="hidden" value="{{ discount_product.id }}"
+                                                                   name="product_id">
+                                                            <a href="javascript:;"
+                                                               onclick="return $('#form-id-{{ discount_product.id }}').submit();"
+                                                               data-toggle="tooltip"
+                                                               title="Add to Cart"><i class="ion-bag"></i></a>
+                                                        </form>
+                                                        <a href="#" data-toggle="modal"
+                                                           data-target="#quick_view"
+                                                           onclick="return quick_view({{ discount_product.id }})"><span
+                                                                data-toggle="tooltip"
+                                                                title="Quick View"><i
+                                                                class="ion-ios-eye-outline"></i></span></a>
+                                                        {% if request.user.is_authenticated %}
+                                                            <form action="{% url 'customer_data:add_to_wish_list_product' %}"
+                                                                  method="post"
+                                                                  is-wish-list-add="true"
+                                                                  class="form-product-ajax"
+                                                                  id="form-wish_list-id-{{ discount_product.id }}"
+                                                            >
+                                                                {% csrf_token %}
+                                                                <input type="hidden" value="{{ discount_product.id }}"
+                                                                       name="product_id">
+
+
+                                                                <a href="javascript:;"
+                                                                   onclick="return $('#form-wish_list-id-{{ discount_product.id }}').submit();"
+                                                                   data-toggle="tooltip"
+                                                                   title="Wishlist"><i
+                                                                        class="ion-android-favorite-outline"></i></a>
+                                                            </form>
+                                                        {% else %}
+                                                            <a href="{% url 'account:login' %}"
+                                                               data-toggle="tooltip"
+                                                               title="Wishlist"><i
+                                                                    class="ion-android-favorite-outline"></i></a>
+                                                        {% endif %}
+
+
+                                                    </div>
+                                                    <div class="product-badge product-badge__2">
+                                                        <div class="product-label discount">
+                                                            <span>{{ discount_product.discount_text }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="product-content">
+                                                    <div class="product-content">
+                                                        <div class="product-name">
+                                                            <h5>
+                                                                <a href="{{ discount_product.get_absolute_url }}">{{ discount_product.title }}</a>
+                                                            </h5>
+                                                        </div>
+                                                        <div class="price-box">
+                                                            <span class="price-old"><del>{{ discount_product.price_text }}</del></span>
+                                                            <span class="price-regular">{{ discount_product.discount_price_text }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- single item end -->
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- categories features end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if products %}
+            <!-- feature categories area start -->
+            <div class="categories-features-area pt-40 pb-40">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="categories-feature-title-inner">
+                                <!-- section title start -->
+                                <div class="section-title">
+                                    <h2>Latest Products</h2>
+                                </div>
+                                <!-- section title end -->
+                            </div>
+
+                            <!-- product tab content start -->
+                            <div class="tab-content">
+                                <!-- product tab start -->
+                                <div class="tab-pane fade active show" id="one">
+                                    <!-- categories features start -->
+                                    <div class="categories-features-wrapper">
+                                        <div class="ht-slick-slider-wrap">
+                                            <div class="ht-slick-slider slick-row-15"
+                                                 data-slick='{"slidesToShow": 4, "slidesToScroll": 1, "speed": 1000, "arrows": true, "prevArrow": ".prev-meat", "nextArrow": ".next-meat", "responsive":[{"breakpoint":992, "settings":{"slidesToShow": 2}}, {"breakpoint":480, "settings":{"slidesToShow": 1}}]}'>
+
+                                                {% for product in products %}
+                                                    <!-- single item start -->
+                                                    <div class="product-item">
+                                                        <div class="product-thumb">
+                                                            <a href="{{ product.get_absolute_url }}">
+                                                                <img src="{{ product.image.url }}" alt="">
+                                                            </a>
+                                                            <div class="add-to-links">
+                                                                <form action="{% url 'cart:add' %}" method="post"
+                                                                      class="form-product-ajax"
+                                                                      id="form-id-{{ product.id }}">
+                                                                    {% csrf_token %}
+                                                                    <input type="hidden" name="quantity" value="1">
+                                                                    <input type="hidden" value="{{ product.id }}"
+                                                                           name="product_id">
+                                                                    <a href="javascript:;"
+                                                                       onclick="return $('#form-id-{{ product.id }}').submit();"
+                                                                       data-toggle="tooltip"
+                                                                       title="Add to Cart"><i class="ion-bag"></i></a>
+                                                                </form>
+                                                                <a href="#" data-toggle="modal"
+                                                                   data-target="#quick_view"
+                                                                   onclick="return quick_view({{ product.id }})"><span
+                                                                        data-toggle="tooltip"
+                                                                        title="Quick View"><i
+                                                                        class="ion-ios-eye-outline"></i></span></a>
+
+                                                                {% if request.user.is_authenticated %}
+                                                                    <form action="{% url 'customer_data:add_to_wish_list_product' %}"
+                                                                          method="post"
+                                                                          is-wish-list-add="true"
+                                                                          class="form-product-ajax"
+                                                                          id="form-wish_list-id-{{ product.id }}"
+                                                                    >
+                                                                        {% csrf_token %}
+                                                                        <input type="hidden" value="{{ product.id }}"
+                                                                               name="product_id">
+
+
+                                                                        <a href="javascript:;"
+                                                                           onclick="return $('#form-wish_list-id-{{ product.id }}').submit();"
+                                                                           data-toggle="tooltip"
+                                                                           title="Wishlist"><i
+                                                                                class="ion-android-favorite-outline"></i></a>
+                                                                    </form>
+                                                                {% else %}
+                                                                    <a href="{% url 'account:login' %}"
+                                                                       data-toggle="tooltip"
+                                                                       title="Wishlist"><i
+                                                                            class="ion-android-favorite-outline"></i></a>
+                                                                {% endif %}
+
+
+                                                            </div>
+                                                            <div class="product-badge product-badge__2">
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="product-content">
+                                                            <div class="product-content">
+                                                                <div class="product-name">
+                                                                    <h5>
+                                                                        <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+                                                                    </h5>
+                                                                </div>
+
+                                                                <div class="price-box">
+                                                                    <span class="price-regular">{{ product.price_text }}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- single item end -->
+                                                {% endfor %}
+
+                                            </div>
+                                            <!-- Start Slider Navigation -->
+                                            <div class="ht-slick-nav">
+                                                <button class="prev-meat"><i class="ion-ios-arrow-left"></i></button>
+                                                <button class="next-meat right"><i class="ion-ios-arrow-right"></i>
+                                                </button>
+                                            </div>
+                                            <!-- End Slider Navigation -->
+                                        </div>
+                                    </div>
+                                    <!-- categories features end -->
+                                </div>
+                                <!-- product tab start -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- feature categories area end -->
+
+        {% endif %}
+
+        {% if offers %}
+            <!-- product feature start -->
+            <div class="product-feature-area pb-40">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <!-- section header wrapper start -->
+                            <div class="section-header-wrap">
+                                <!-- section title start -->
+                                <div class="section-title">
+                                    <h2>Special offers</h2>
+                                </div>
+                                <!-- section title end -->
+
+                                <!-- Start Slider Navigation -->
+                                <div class="ht-slick-nav slick-append">
+                                    <button class="prev-recom"><i class="ion-ios-arrow-left"></i></button>
+                                    <button class="next-recom right"><i class="ion-ios-arrow-right"></i></button>
+                                </div>
+                                <!-- End Slider Navigation -->
+                            </div>
+                            <!-- section header wrapper end -->
+
+                            <!-- categories wrapper start -->
+                            <div class="categories-item-wrapper pt-30">
+                                <div class="ht-slick-slider-wrap">
+                                    <div class="ht-slick-slider slick-row-15"
+                                         data-slick='{"slidesToShow": 4, "slidesToScroll": 1, "rows": 2, "speed": 1000, "prevArrow": ".prev-recom", "nextArrow": ".next-recom", "responsive":[{"breakpoint":992, "settings":{"slidesToShow": 3}}, {"breakpoint":768, "settings":{"slidesToShow": 2}}, {"breakpoint":480, "settings":{"slidesToShow": 1, "rows": 1}}]}'>
+                                        {% for offer in offers %}
+                                            <!-- categories item start -->
+                                            <div class="categories-item">
+                                                <div class="categories-thumb">
+
+                                                    <img src="{{ offer.image.url }}" alt="">
+
+                                                </div>
+                                                <div class="categories-content">
+                                                    <h5>{{ offer.title }}</h5>
+                                                    <p>{{ offer.description }}</p>
+                                                </div>
+                                            </div>
+                                            <!-- categories item end -->
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- categories wrapper end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- product feature end -->
+        {% endif %}
+
+    </main>
+
+{% endblock content %}

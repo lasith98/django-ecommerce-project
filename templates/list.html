@@ -1,0 +1,284 @@
+{% extends 'layout/stroe_layout.html' %}
+{% load static %}
+{% block content %}
+
+    <main>
+        <!-- breadcrumb area start -->
+        <div class="breadcrumb-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="breadcrumb-wrap">
+                            <nav aria-label="breadcrumb">
+                                <ul class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Home</a></li>
+                                    <li class="breadcrumb-item"><a href="{% url 'store:shop' %}">shop</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Prodcut</li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- breadcrumb area end -->
+
+        <!-- page main wrapper start -->
+        <div class="shop-main-wrapper pt-40 pb-40">
+            <div class="container custom-container">
+                <div class="row">
+                    <!-- shop main wrapper start -->
+                    <div class="col-lg-12">
+                        <div class="shop-product-wrapper">
+                            <!-- shop product top wrap start -->
+                            <div class="shop-top-bar">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-7 col-md-6 order-2 order-md-1">
+                                        <div class="top-bar-left">
+                                            <div class="product-view-mode">
+                                                <a class="active" href="#" data-target="grid-view"><i
+                                                        class="fa fa-th"></i></a>
+                                                <a href="#" data-target="list-view"><i class="fa fa-list"></i></a>
+                                            </div>
+                                            <div class="product-amount">
+                                                <p>Showing {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                                                    results</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-5 col-md-6 order-1 order-md-2">
+                                        <div class="top-bar-right">
+                                            <div class="product-short">
+                                                <p>Sort By : </p>
+                                                <form action="{% url 'store:shop' %}">
+
+                                                    <select class="nice-select" name="orderby"
+                                                            onchange="this.form.submit()">
+                                                        <option value="create_date"> Latest</option>
+                                                        <option value="price"> Price: low to high</option>
+                                                        <option value="-price"> Price: high to low</option>
+
+                                                    </select>
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- shop product top wrap start -->
+
+                            <!-- product item list start -->
+                            <div class="shop-product-wrap grid-view row pt-40">
+
+                                {% if object_list %}
+                                    {% for product in object_list %}
+                                        <!-- product single item start -->
+                                        <div class="col-lg-3 col-md-4 col-sm-6">
+
+
+                                            <!-- product grid start -->
+                                            <div class="product-item mb-30">
+                                                <div class="product-thumb">
+
+                                                    <a href="{{ product.get_absolute_url }}">
+                                                        <img src="{{ product.image.url }}" alt="Not Found">
+                                                    </a>
+                                                    <div class="add-to-links">
+                                                        <form action="{% url 'cart:add' %}" method="post"
+                                                              class="form-product-ajax" id="form-id-{{ product.id }}">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="quantity" value="1">
+                                                            <input type="hidden" value="{{ product.id }}"
+                                                                   name="product_id">
+                                                            <a href="javascript:;"
+                                                               onclick="return $('#form-id-{{ product.id }}').submit();"
+                                                               data-toggle="tooltip"
+                                                               title="Add to Cart"><i class="ion-bag"></i></a>
+                                                        </form>
+                                                        <a href="#" data-toggle="modal"
+                                                           data-target="#quick_view"
+                                                           onclick="return quick_view({{ product.id }})"><span
+                                                                data-toggle="tooltip"
+                                                                title="Quick View"><i
+                                                                class="ion-ios-eye-outline"></i></span></a>
+
+                                                        {% if request.user.is_authenticated %}
+                                                            <form action="{% url 'customer_data:add_to_wish_list_product' %}"
+                                                                  method="post"
+                                                                  is-wish-list-add="true"
+                                                                  class="form-product-ajax"
+                                                                  id="form-wish_list-id-{{ product.id }}"
+                                                            >
+                                                                {% csrf_token %}
+                                                                <input type="hidden" value="{{ product.id }}"
+                                                                       name="product_id">
+
+
+                                                                <a href="javascript:;"
+                                                                   onclick="return $('#form-wish_list-id-{{ product.id }}').submit();"
+                                                                   data-toggle="tooltip"
+                                                                   title="Wishlist"><i
+                                                                        class="ion-android-favorite-outline"></i></a>
+                                                            </form>
+                                                        {% else %}
+                                                            <a href="{% url 'account:login' %}"
+                                                               data-toggle="tooltip"
+                                                               title="Wishlist"><i
+                                                                    class="ion-android-favorite-outline"></i></a>
+                                                        {% endif %}
+
+
+                                                    </div>
+
+                                                    <div class="product-badge">
+
+                                                        {% include 'component/product-badge.html' with product=product %}
+                                                    </div>
+
+
+                                                </div>
+
+
+                                                <div class="product-content">
+                                                    <div class="product-content">
+                                                        <div class="product-name">
+                                                            <h5>
+                                                                <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+                                                            </h5>
+                                                        </div>
+
+                                                        <div class="price-box">
+                                                            {% if product.is_discount %}
+                                                                <span class="price-old"><del>{{ product.price_text }}</del></span>
+                                                                <span class="price-regular">{{ product.discount_price_text }}</span>
+                                                            {% else %}
+                                                                <span class="price-regular">{{ product.price_text }}</span>
+                                                            {% endif %}
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- product grid end -->
+
+
+                                            <!-- product list item end -->
+                                            <div class="product-list-item mb-30">
+                                                <div class="product-thumb">
+                                                    <a href="{{ product.get_absolute_url }}">
+                                                        <img src="{{ product.image.url }}" alt="Not Found">
+                                                    </a>
+                                                    <div class="add-to-links">
+                                                        <form action="{% url 'cart:add' %}" method="post"
+                                                              class="form-product-ajax"
+                                                              id="form-list-id-{{ product.id }}">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="quantity" value="1">
+                                                            <input type="hidden" value="{{ product.id }}"
+                                                                   name="product_id">
+                                                            <a href="javascript:;"
+                                                               onclick="return $('#form-list-id-{{ product.id }}').submit();"
+                                                               data-toggle="tooltip"
+                                                               title="Add to Cart"><i class="ion-bag"></i></a>
+                                                        </form>
+                                                        <a href="#" data-toggle="modal"
+                                                           data-target="#quick_view"
+                                                           onclick="return quick_view({{ product.id }})"><span
+                                                                data-toggle="tooltip"
+                                                                title="Quick View"><i
+                                                                class="ion-ios-eye-outline"></i></span></a>
+
+                                                        {% if request.user.is_authenticated %}
+                                                            <form action="{% url 'customer_data:add_to_wish_list_product' %}"
+                                                                  method="post"
+                                                                  is-wish-list-add="true"
+                                                                  class="form-product-ajax"
+                                                                  id="form-wish_list-id-{{ product.id }}"
+                                                            >
+                                                                {% csrf_token %}
+                                                                <input type="hidden" value="{{ product.id }}"
+                                                                       name="product_id">
+
+
+                                                                <a href="javascript:;"
+                                                                   onclick="return $('#form-wish_list-id-{{ product.id }}').submit();"
+                                                                   data-toggle="tooltip"
+                                                                   title="Wishlist"><i
+                                                                        class="ion-android-favorite-outline"></i></a>
+                                                            </form>
+                                                        {% else %}
+                                                            <a href="{% url 'account:login' %}"
+                                                               data-toggle="tooltip"
+                                                               title="Wishlist"><i
+                                                                    class="ion-android-favorite-outline"></i></a>
+                                                        {% endif %}
+
+
+                                                    </div>
+
+                                                        <div class="product-badge product-badge__2">
+                                                             {% include 'component/product-badge.html' with product=product %}
+                                                        </div>
+
+                                                </div>
+                                                <div class="product-content-list">
+                                                    <h5 class="product-name"><a
+                                                            href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+                                                    </h5>
+
+                                                    <div class="price-box">
+                                                        {% if product.is_discount %}
+                                                            <span class="price-old"><del>{{ product.price_text }}</del></span>
+                                                            <span class="price-regular">{{ product.discount_price_text }}</span>
+                                                        {% else %}
+                                                            <span class="price-regular">{{ product.price_text }}</span>
+                                                        {% endif %}
+
+                                                    </div>
+                                                    <p>{{ product.description }}</p>
+
+                                                </div>
+                                            </div> <!-- product list item end -->
+                                        </div>
+                                        <!-- product single item start -->
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <!-- product item list end -->
+                            {% if is_paginated %}
+                                <!-- start pagination area -->
+                                <div class="paginatoin-area text-center">
+                                    <ul class="pagination-box">
+                                        {% if page_obj.has_previous %}
+                                            <li><a class="previous" href="?page={{ page_obj.previous_page_number }}"><i
+                                                    class="ion-ios-arrow-left"></i>Previous</a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% for i in page_obj.paginator.page_range %}
+                                            {% if page_obj.number == i %}
+                                                <li class="active"><a href="?page={{ i }}">{{ i }}</a></li>
+                                            {% else %}
+                                                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if page_obj.has_next %}
+                                            <li><a class="next" href="?page={{ page_obj.next_page_number }}">Next<i
+                                                    class="ion-ios-arrow-right"></i></a></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                                <!-- end pagination area -->
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <!-- shop main wrapper end -->
+                </div>
+            </div>
+        </div>
+        <!-- page main wrapper end -->
+    </main>
+
+{% endblock content %}

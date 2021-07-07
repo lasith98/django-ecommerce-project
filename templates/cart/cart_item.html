@@ -1,0 +1,34 @@
+{% if cart %}
+    <ul class="cart-list">
+        {% for item in cart.item.all %}
+            <li>
+                <div class="cart-img">
+                    <a href="{{ item.product.get_absolute_url }}"><img
+                            src="{{ item.product.image.url }}"
+                            alt="product image"></a>
+                </div>
+                <div class="cart-info">
+                    <h4><a href="{{ item.product.get_absolute_url }}">simple
+                        product</a></h4>
+                    <span class="cart-qty">Qty: {{ item.quantity }}</span>
+                    <span>{{ item.get_total_text }}</span>
+                </div>
+                <div class="del-icon">
+                    <a href="javascript:;" class="delete-product"
+                       onclick="return delete_product('{% url "cart:remove" item.id %}')"> <i
+                            class="fa fa-times"></i></a>
+                </div>
+            </li>
+        {% endfor %}
+        <li class="mini-cart-price">
+            <span class="subtotal">subtotal : </span>
+            <span class="subtotal-price ml-auto">{{ currency }} {{ cart.sub_total |floatformat:2 }}</span>
+        </li>
+        <li>
+            <div class="mini-cart-button">
+                <a class="check-btn" href="{% url 'cart:index' %}">View Cart</a>
+                <a class="check-btn" href="{% url 'cart:checkout' %}">checkout</a>
+            </div>
+        </li>
+    </ul>
+{% endif %}

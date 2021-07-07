@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{ object.order_id }}</title>
+    <link rel="stylesheet" href="{% static 'css/invoice.css' %}" media="all"/>
+</head>
+<body>
+<header class="clearfix">
+    <div id="logo">
+        <img src="{% static 'img/logo/logo.png' %}" alt="No Logo Found">
+    </div>
+    <div id="company">
+        <h2 class="name">Arunonandha Super Online</h2>
+        <div>Arunonandha Super Grocery Kaburupitiya Road Thihagoda</div>
+        <div>041 224 59 63 | 0767 446 446 | 0702 446 446</div>
+        <div><a href="mailto:company@example.com">info@arunalu.lk</a></div>
+    </div>
+</header>
+<main>
+    <div id="details" class="clearfix">
+        <div id="client">
+            <div class="to">Billing</div>
+            <h2 class="name">{{ object.billing_address.first_name }} {{ object.billing_address.last_name }}</h2>
+            <div class="address">{{ object.billing_address.address_only }}</div>
+            <div class="email">{{ object.billing_address.phone }}</div>
+            <div class="email"><a
+                    href="mailto:{{ object.billing_address.email }}">{{ object.billing_address.email }}</a></div>
+        </div>
+        {% if  object.shipping_address %}
+            <div id="client-shipping">
+                <div class="to">Shipping</div>
+                <h2 class="name">{{ object.shipping_address.first_name }} {{ object.shipping_address.last_name }}</h2>
+                <div class="address">{{ object.shipping_address.address_only }}</div>
+            </div>
+        {% endif %}
+
+
+        <div id="invoice">
+            <h1>INVOICE NO : {{ object.id }}</h1>
+            <div class="date">Date of Invoice: {{ object.order_date |date:'Y-m-d  H:i' }}</div>
+            <div class="date">Due Date: {{ object.update_at |date:'Y-m-d  H:i' }}</div>
+        </div>
+    </div>
+
+
+    <table border="0" cellspacing="0" cellpadding="0">
+        <thead>
+        <tr>
+            <th class="no">#</th>
+            <th class="desc">DESCRIPTION</th>
+            <th class="unit">UNIT PRICE</th>
+            <th class="qty">QUANTITY</th>
+            <th class="total">TOTAL</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for item in object.orderitem_set.all %}
+            <tr>
+                <td class="no">{{ forloop.counter }}</td>
+                <td class="desc">{{ item.product.title }}</td>
+                <td class="unit">{{ currency }} {{ item.sale_price |floatformat:2 }}</td>
+                <td class="qty">{{ item.quantity }}</td>
+                <td class="total">{{ currency }} {{ item.total |floatformat:2 }}</td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="2"></td>
+            <td colspan="2">SUBTOTAL</td>
+            <td>{{ currency }} {{ object.sub_total |floatformat:2 }}</td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+            <td colspan="2">Delivery</td>
+            <td>{{ currency }} {{ object.shipping_cost |floatformat:2 }}</td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+            <td colspan="2">TOTAL</td>
+            <td>{{ currency }} {{ object.total |floatformat:2 }}</td>
+        </tr>
+        </tfoot>
+    </table>
+    <div id="thanks">Thank you!</div>
+    {#    <div id="notices">#}
+    {#        <div>NOTICE:</div>#}
+    {#        <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>#}
+    {#    </div>#}
+</main>
+<footer>
+    Invoice was created on a computer and is valid without the signature and seal.
+</footer>
+</body>
+</html>

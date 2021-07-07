@@ -1,0 +1,37 @@
+{% load static %}
+<!-- hero slider area start -->
+<div class="hero-slider-wrapper mt-30">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="hero-slider-active slick-dot-style">
+                    {% if carousel %}
+
+                        {% for item in carousel %}
+                            <!-- slider item start -->
+                            <div class="hero-item-inner">
+                                <div class="hero-slider-item d-flex align-items-center bg-img"
+                                     data-bg="{{ item.image.url }}">
+                                    <div class="hero-slider-content">
+                                        <h1>{{ item.title }}<br> {{ item.sub_title }}</h1>
+                                        <h4>{{ item.content }} <br> {{ item.sub_content }}</h4>
+                                        {% if item.link %}
+                                            <a href="{{ item.link }}" class="btn btn-slider">{{ item.link_text }}</a>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- slider item end -->
+                        {% endfor %}
+
+
+
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- hero slider area end -->

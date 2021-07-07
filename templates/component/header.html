@@ -1,0 +1,326 @@
+{% load static %}
+<!-- Start Header Area -->
+<header class="header-area">
+    <!-- main header start -->
+    <div class="main-header d-none d-lg-block">
+        <!-- header top start -->
+        <div class="header-top">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="welcome-message">
+                            <p>Welcome to Arunalu.lk </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="header-top-settings">
+                            <ul class="nav align-items-center">
+                                <li class="account-settings">
+                                    My account
+                                    <i class="fa fa-angle-down"></i>
+                                    <ul class="dropdown-list account-list">
+                                        {% if user.is_authenticated %}
+                                            <li><a href="{% url 'account:index' %}">Dashboard</a></li>
+                                            <li><a href="{% url 'customer_data:index' %}"> Orders</a></li>
+                                            <li><a href="{% url 'customer_data:download' %}"> Download</a></li>
+                                            <li><a href="{% url 'customer_data:wish_list' request.user.wishlist.id %}">Wish
+                                                List</a></li>
+                                            <li><a href="{% url 'account:logout' %}"> Logout</a></li>
+                                        {% else %}
+                                            <li><a href="{% url 'account:login' %}">login register</a></li>
+                                        {% endif %}
+
+                                    </ul>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- header top end -->
+
+        <!-- header middle area start -->
+        <div class="header-middle-area">
+            <div class="container">
+                <div class="row align-items-center">
+                    <!-- start logo area -->
+                    <div class="col-lg-3">
+                        <div class="logo">
+                            <a href="{% url 'store:index' %}">
+                                <img src="{% static 'img/logo/logo.png' %}" alt="">
+                            </a>
+                        </div>
+                    </div>
+                    <!-- start logo area -->
+
+                    <!-- start search box area -->
+                    <div class="col-lg-6">
+                        <div class="search-box-wrapper">
+                            <div class="search-box-inner-wrap">
+                                <form action="{% url 'store:shop' %}" method="post" class="search-box-inner">
+                                    {% csrf_token %}
+                                    <div class="search-field-wrap">
+                                        <input type="text" class="search-field" placeholder="Enter your search key"
+                                               name="query">
+                                    </div>
+                                    <div class="search-select-box">
+                                        <select name="category">
+                                            <option value="all">All categories</option>
+                                            {% if categories %}
+
+                                                {% for category in categories %}
+                                                    {% if category_name == category.name %}
+                                                        <option selected="selected"
+                                                                value="{{ category.id }}">{{ category.name }}</option>
+                                                    {% else %}
+                                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                                    {% endif %}
+
+                                                {% endfor %}
+                                            {% endif %}
+
+                                        </select>
+                                    </div>
+                                    <div class="search-btn">
+                                        <button><i class="ion-ios-search"></i></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- start search box end -->
+                    <!-- mini cart area start -->
+                    <div class="col-lg-3 ml-auto">
+                        <div class="header-configure-area">
+                            <ul class="nav justify-content-end">
+                                {% if request.user.is_authenticated %}
+                                    <li>
+                                        <a href="{% url 'customer_data:wish_list'  request.user.wishlist.id %}">
+                                            <i class="ion-android-favorite-outline"></i>
+                                            <span class="notification wish-list-notification">{{ wish_list_count }}</span>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a href="{% url 'account:login' %}">
+                                            <i class="ion-android-favorite-outline"></i>
+                                            <span class="notification wish-list-notification">{{ wish_list_count }}</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                <li class="mini-cart-wrap">
+                                    <a href="{% url 'cart:index' %}">
+                                        <i class="ion-bag"></i>
+                                        {% if  request.session.cart_item_count %}
+                                            <span class="notification cart-notification">{{ request.session.cart_item_count }}</span>
+                                        {% else %}
+                                            <span class="notification cart-notification">0</span>
+                                        {% endif %}
+                                    </a>
+                                    {% include 'cart/cart_item.html' %}
+
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- mini cart area end -->
+                </div>
+            </div>
+        </div>
+        <!-- header middle area end -->
+
+        <!-- main menu area start -->
+        <div class="main-menu-area theme-color-2 sticky">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-3">
+                        <div class="category-toggle-wrap">
+                            <div class="category-toggle">
+                                <i class="ion-android-menu"></i>
+                                all categories
+                                <span><i class="ion-android-arrow-dropdown"></i></span>
+                            </div>
+                            <nav class="category-menu">
+                                <ul class="categories-list">
+                                    {% if categories %}
+                                        {% for category in categories %}
+                                            <li>
+                                                <a href="{% url 'store:category_list' category_id=category.id %}">{{ category.name }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="main-menu home-main">
+                            <!-- main menu navbar start -->
+                            <nav class="desktop-menu">
+                                <ul>
+                                    <li><a href="{% url 'store:index' %}">Home</a></li>
+                                    <li><a href="{% url 'store:shop' %}">Shop</a></li>
+                                    <li><a href="{% url 'store:contact_us' %}">Contact</a></li>
+                                </ul>
+                            </nav>
+                            <!-- main menu navbar end -->
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="contact-top">
+                            <div class="contact-top-icon">
+                                <img src="{% static 'img/icon/download.png' %}" alt="">
+                            </div>
+                            <div class="contact-top-info">
+                                <p>call us now</p>
+                                <a href="#">0702 446 446</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- main menu area end -->
+    </div>
+    <!-- main header start -->
+
+    <!-- mobile header start -->
+    <div class="mobile-header d-lg-none d-md-block sticky">
+        <!--mobile header top start -->
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <div class="mobile-header-top">
+                        <div class="header-top-settings">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="mobile-main-header">
+                        <div class="mobile-logo">
+                            <a href="{% url 'store:index' %}">
+                                <img src="{% static 'img/logo/logo.png' %}" alt="Brand Logo">
+                            </a>
+                        </div>
+
+
+                        <div class="mobile-menu-toggler">
+                            <div class="mini-cart-wrap">
+                                <a href="{% url 'cart:index' %}">
+                                    <i class="ion-bag"></i>
+                                    {% if  request.session.cart_item_count %}
+                                        <span class="notification cart-notification">{{ request.session.cart_item_count }}</span>
+                                    {% else %}
+                                        <span class="notification cart-notification">0</span>
+                                    {% endif %}
+                                </a>
+
+                            </div>
+                            <div class="mobile-menu-btn">
+                                <div class="off-canvas-btn">
+                                    <i class="ion-android-menu"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="category-toggle-wrap">
+                        <div class="category-toggle">
+                            <i class="ion-android-menu"></i>
+                            all categories
+                            <span><i class="ion-android-arrow-dropdown"></i></span>
+                        </div>
+                        <nav class="category-menu">
+                            <ul class="categories-list">
+                                {% if categories %}
+                                    {% for category in categories %}
+                                        <li>
+                                            <a href="{% url 'store:category_list' category_id=category.id %}">{{ category.name }}</a>
+                                        </li>
+                                    {% endfor %}
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- mobile header top start -->
+    </div>
+    <!-- mobile header end -->
+</header>
+<!-- end Header Area -->
+
+<!-- off-canvas menu start -->
+<aside class="off-canvas-wrapper">
+    <div class="off-canvas-overlay"></div>
+    <div class="off-canvas-inner-content">
+        <div class="btn-close-off-canvas">
+            <i class="ion-android-close"></i>
+        </div>
+
+        <div class="off-canvas-inner">
+            <!-- search box start -->
+            <div class="search-box-offcanvas">
+                <form action="{% url 'store:shop' %}" method="post">
+                    <input type="hidden" name="category" value="all">
+                    {% csrf_token %}
+                    <input type="text" placeholder="Search Here..." name="query">
+                    <button class="search-btn"><i class="ion-ios-search-strong"></i></button>
+                </form>
+            </div>
+            <!-- search box end -->
+
+            <!-- mobile menu start -->
+            <div class="mobile-navigation">
+
+                <!-- mobile menu navigation start -->
+                <nav>
+                    <ul class="mobile-menu">
+
+                        <li class="menu-item-has-children active"><a href="{% url 'store:index' %}">Home</a></li>
+                        <li class="menu-item-has-children active"><a href="{% url 'store:shop' %}">Shop</a></li>
+                        <li class="menu-item-has-children active"><a href="{% url 'store:contact_us' %}">Contact</a>
+                        </li>
+                        <li class="menu-item-has-children "><a href="{% url 'account:index' %}">Account</a></li>
+                        {% if request.user.is_authenticated %}
+                            <li class="menu-item-has-children "><a
+                                    href="{% url 'customer_data:wish_list' request.user.wishlist.id %}">Wish List</a>
+                            </li>
+                        {% else %}
+                            <li class="menu-item-has-children "><a
+                                    href="{% url 'account:login' %}">Wish List</a>
+                            </li>
+                        {% endif %}
+
+
+                    </ul>
+                </nav>
+                <!-- mobile menu navigation end -->
+            </div>
+            <!-- mobile menu end -->
+
+            <!-- offcanvas widget area start -->
+            <div class="offcanvas-widget-area">
+                <div class="off-canvas-contact-widget">
+                    <ul>
+                        <li><i class="fa fa-mobile"></i>
+                            <a href="#">0702 446 446</a>
+                        </li>
+                        <li><i class="fa fa-envelope-o"></i>
+                            <a href="#">info@arunalu.lk</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- offcanvas widget area end -->
+        </div>
+    </div>
+</aside>
+<!-- off-canvas menu end -->

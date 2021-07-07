@@ -1,0 +1,45 @@
+<div class="col-lg-3 col-md-4">
+    <div class="myaccount-tab-menu nav" role="tablist">
+        {% if active == "dashboard" %}
+            <a href="{% url 'account:index' %}" class="active" ><i class="fa fa-dashboard"></i>
+                Dashboard</a>
+        {% else %}
+            <a href="{% url 'account:index' %}" ><i class="fa fa-dashboard"></i>
+                Dashboard</a>
+        {% endif %}
+        {% if active == "orders" %}
+            <a href="{% url 'customer_data:index' %}"  class="active"><i
+                    class="fa fa-cart-arrow-down"></i>
+                Orders</a>
+        {% else %}
+            <a href="{% url 'customer_data:index' %}" ><i class="fa fa-cart-arrow-down"></i>
+                Orders</a>
+        {% endif %}
+
+        {% if active == "download" %}
+            <a href="{% url 'customer_data:download' %}"  class="active"><i class="fa fa-cloud-download"></i>
+                Download</a>
+        {% else %}
+            <a href="{% url 'customer_data:download' %}" ><i class="fa fa-cloud-download"></i>
+                Download</a>
+        {% endif %}
+        {% if active == "address" %}
+            <a href="{% url 'customer_data:update_address_view' %}"  class="active"><i class="fa fa-map-marker"></i>
+                address</a>
+        {% else %}
+            <a href="{% url 'customer_data:update_address_view' %}" ><i class="fa fa-map-marker"></i>
+                address</a>
+        {% endif %}
+        {% if active == "details" %}
+            <a href="{%  url 'customer_data:details' %}"  class="active"><i class="fa fa-user"></i> Account
+                Details</a>
+        {% else %}
+            <a href="{%  url 'customer_data:details' %}" ><i class="fa fa-user"></i> Account
+                Details</a>
+        {% endif %}
+
+        <a href="{% url 'account:logout' %}"><i class="fa fa-sign-out"></i> Logout</a>
+
+
+    </div>
+</div>

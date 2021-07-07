@@ -1,0 +1,70 @@
+<!-- Quick view modal start -->
+
+<div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <!-- product details inner end -->
+            <div class="product-details-inner">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <div class="product-large-slider">
+                            <div class="pro-large-img">
+                                <img src="{{ object.image.url }}" alt="Not Fount"/>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="product-details-des quick-des">
+                            <h5 class="product-name">{{ object.title }}</h5>
+
+                            <div class="price-box">
+                                {% if object.is_discount %}
+                                    <span class="price-old"><del>{{ object.price_text }}</del></span>
+                                    <span class="price-regular">{{ object.discount_price_text }}</span>
+                                {% else %}
+                                    <span class="price-regular">{{ object.price_text }}</span>
+                                {% endif %}
+
+                            </div>
+                            <p>{{ object.description }}</p>
+                            <div class="{{ object.get_availability_color }} mt-10 mb-20">
+                                <i class="ion-checkmark-circled"></i>
+                                <span>{{ object.availability }}</span>
+                            </div>
+                            {% if object.is_available %}
+                                <form action="{% url 'cart:add' %}" method="post" class="form-product-model-ajax">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{ object.id }}" name="product_id">
+                                    <div class="quantity-cart-box d-flex align-items-center">
+                                        <div class="quantity">
+                                            <input type="number" value="1"
+                                                   name="quantity"
+                                                   max="{{ object.maximum }}" min="1">
+
+
+                                        </div>
+                                        <div class="action_link">
+                                            <button class="buy-btn" type="submit">
+                                                <i class="ion-bag"></i>Add
+                                                to
+                                                cart
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- product details inner end -->
+        </div>
+    </div>
+</div>
+
+<!-- Quick view modal end -->

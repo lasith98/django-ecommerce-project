@@ -1,0 +1,15 @@
+{% extends 'layout/account_layout.html' %}
+{% block my_account_tab_menu %}
+    {% include 'account/tab-list.html' with active="dashboard" %}
+{% endblock %}
+{% block my_account_content %}
+    <h3>Dashboard</h3>
+    <div class="welcome">
+        <p>Hello, <strong>{{ request.user.profile.display_name }}</strong> (If Not <strong>{{ request.user.profile.display_name }}
+            !</strong><a href="{% url 'account:logout' %}" class="logout"> Logout</a>)
+        </p>
+    </div>
+    <p class="mb-0">From your account dashboard. you can easily check &
+        view your recent orders, manage your shipping and billing addresses
+        and edit your password and account details.</p>
+{% endblock %}

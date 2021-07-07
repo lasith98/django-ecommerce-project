@@ -1,0 +1,107 @@
+{% extends 'layout/stroe_layout.html' %}
+{% block content %}
+    <main>
+        <!-- breadcrumb area start -->
+        <div class="breadcrumb-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="breadcrumb-wrap">
+                            <nav aria-label="breadcrumb">
+                                <ul class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Home</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">cart</li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- breadcrumb area end -->
+        {% if cart %}
+            <!-- cart main wrapper start -->
+            <div class="cart-main-wrapper pt-40 pb-40">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <!-- Cart Table Area -->
+                            <div class="cart-table table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th class="pro-thumbnail">Thumbnail</th>
+                                        <th class="pro-title">Product</th>
+                                        <th class="pro-price">Price</th>
+                                        <th class="pro-quantity">Quantity</th>
+                                        <th class="pro-subtotal">Total</th>
+                                        <th class="pro-remove">Remove</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in cart.item.all %}
+                                        <tr>
+                                            <td class="pro-thumbnail"><a href="{{ item.product.get_absolute_url }}"><img
+                                                    class="img-fluid"
+                                                    src="{{ item.product.image.url }}"
+                                                    alt="Product"/></a></td>
+                                            <td class="pro-title"><a
+                                                    href="{{ item.product.get_absolute_url }}">{{ item.product.title }}</a>
+                                            </td>
+                                            <td class="pro-price"><span>{{ currency }} {{ item.product.get_price | floatformat:2}}</span></td>
+                                            <td class="pro-quantity">
+                                                {{ item.quantity }}
+                                            </td>
+                                            <td class="pro-subtotal"><span>{{ currency }} {{ item.get_total | floatformat:2}}</span></td>
+                                            <td class="pro-remove"><a href="{% url 'cart:remove' item.id %}"><i
+                                                    class="fa fa-trash-o"></i></a></td>
+                                        </tr>
+                                    {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- Cart Update Option -->
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5 ml-auto">
+                            <!-- Cart Calculation Area -->
+                            <div class="cart-calculator-wrapper">
+                                <div class="cart-calculate-items">
+                                    <h3>Cart Totals</h3>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tr>
+                                                <td>Sub Total</td>
+                                                <td>{{ currency }} {{ cart.sub_total |floatformat:2 }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Delivery</td>
+                                                <td>{{ currency }} {{ cart.shipping_cost |floatformat:2  }}</td>
+                                            </tr>
+                                            <tr class="total">
+                                                <td>Total</td>
+                                                <td class="total-amount">{{ currency }} {{ cart.total_with_shipping|floatformat:2 }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <a href="{% url 'cart:checkout' %}" class="btn btn__bg d-block">Proceed To Checkout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- cart main wrapper end -->
+            {% else %}
+            <div class="container" >
+             <p style="margin-top: 100px">Your cart is currently empty.</p>
+            <a href="{% url 'store:shop' %}" class="btn btn__bg d-block" style="margin-top: 100px;margin-bottom: 100px">Return to shop</a>
+            </div>
+
+        {% endif %}
+
+    </main>
+{% endblock %}

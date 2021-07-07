@@ -1,0 +1,85 @@
+{% extends 'layout/stroe_layout.html' %}
+{% load static %}
+{% block content %}
+    <main>
+        <!-- breadcrumb area start -->
+        <div class="breadcrumb-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="breadcrumb-wrap">
+                            <nav aria-label="breadcrumb">
+                                <ul class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Home</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">contact us</li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- breadcrumb area end -->
+
+        <!-- contact area start -->
+        <div class="contact-area pt-40 pb-40">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="contact-message">
+                            <h2>Leave us a Message</h2>
+                            <form id="contact-form"
+                                  action="{% url 'store:contact_us' %}"
+                                  method="post" class="contact-form">
+                                {{ csrf_input }}
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <input name="name" placeholder="Name *" type="text" required>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <input name="mobile_no" placeholder="Phone *" type="text" required>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <input name="email" placeholder="Email *" type="text" required>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <input name="subject" placeholder="Subject *" type="text">
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="contact2-textarea text-center">
+                                            <textarea placeholder="Message *" name="message" class="form-control2"
+                                                      required=""></textarea>
+                                        </div>
+                                        <div class="contact-btn">
+                                            <button class="btn btn-outline" type="submit">Send Message</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <p class="form-messege"></p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="contact-info">
+                            <h2>contact us</h2>
+                            <p>Feel free to contact us for any kind of sales or delivery requests. We will respond you
+                                accordingly within our business hours as soon as possible.</p>
+                            <ul>
+                                <li><i class="fa fa-fax"></i> Address : Arunonandha Super Grocery Kaburupitiya Road Thihagoda</li>
+                                <li><i class="fa fa-phone"></i> 041 224 59 63  | 0767 446 446 | 0702 446 446</li>
+                                <li><i class="fa fa-envelope-o"></i> info@arunalu.lk</li>
+                            </ul>
+                            <div class="working-time">
+                                <h3>Working hours</h3>
+                                <p><span>Monday – Saturday:</span>08AM – 22PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- contact area end -->
+    </main>
+{% endblock content %}
