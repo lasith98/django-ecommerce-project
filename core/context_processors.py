@@ -8,6 +8,7 @@ from django.conf import settings
 def cart_processor(request):
     cart = None
     wish_list_count = 0
+    default_welcome_msg = "Getting touch with us, we are ready for the next offers in 11.11 sale"
     if request.session.has_key(CART_ID):
         try:
             cart = Cart.objects.get(pk=request.session.get(CART_ID), active=True)
@@ -23,6 +24,7 @@ def cart_processor(request):
         'cart': cart,
         'categories': Category.objects.all(),
         'wish_list_count': wish_list_count,
-        'currency': settings.CURRENCY_TYPE
+        'currency': settings.CURRENCY_TYPE,
+        'default_welcome_msg': default_welcome_msg
     }
     return context
